@@ -6,4 +6,4 @@ Demos:
 
 Roulette: https://doug-doug-doug.github.io/roulette/roulette.html
 
-Blackjack (kinda laggy): https://doug-doug-doug.github.io/blackjack/blackjack.html
+Blackjack (kinda laggy sometimes): https://doug-doug-doug.github.io/blackjack/blackjack.html
