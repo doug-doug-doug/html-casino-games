@@ -181,5 +181,12 @@ randCard('player');
 randCard('player');
 randCard('bot');
 randCard('bot');
+
+/* To fix what happens when both users start with 21 */
+if (sessionStorage.getItem('player') == '21' && sessionStorage.getItem('bot') == '21'){
+	document.getElementById('win').style.display = 'none';
+	document.getElementById('lose').style.display = 'none';
+	document.getElementById('tie').style.display = 'block';
+}
 </script>
 </body>
