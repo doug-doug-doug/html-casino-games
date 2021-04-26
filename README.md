@@ -6,6 +6,6 @@ Demos:
 
 Roulette: https://doug-doug-doug.github.io/casino/roulette
 
-Blackjack (kinda laggy sometimes): https://doug-doug-doug.github.io/casino/blackjack
+Blackjack (cards from http://acbl.mybigcommerce.com/52-playing-cards/): https://doug-doug-doug.github.io/casino/blackjack
 
 (Was coded over two days)
