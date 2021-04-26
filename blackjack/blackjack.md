@@ -5,3 +5,5 @@
 This is a game of blackjack. The AI is kind of dumb (it draws until its total score is > 18).
 
 Cards from http://acbl.mybigcommerce.com/52-playing-cards/
+
+Demo (kinda laggy): https://doug-doug-doug.github.io/blackjack/blackjack.html
