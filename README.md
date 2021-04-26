@@ -4,6 +4,6 @@ Some html casino games. Currently just roulette (european) and blackjack.
 
 Demos:
 
-Roulette: https://doug-doug-doug.github.io/roulette/roulette.html
+Roulette: https://doug-doug-doug.github.io/roulette/roulette
 
-Blackjack (kinda laggy sometimes): https://doug-doug-doug.github.io/blackjack/blackjack.html
+Blackjack (kinda laggy sometimes): https://doug-doug-doug.github.io/blackjack/blackjack
