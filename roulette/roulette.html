@@ -1,0 +1,274 @@
+<head>
+</head>
+<body>
+<style id='targetSpin'>
+/* IMPORTANT */
+</style>
+<div class='wheel_container' style='width:30%;height:40%;'>
+	<img src='pointer.png' style='position:relative;top:0%;left:40%;width:20%;z-index:100;height:20%;'>
+	<img id='wheel' src='roulette_wheel.png' style='position:relative;top:0%;left:0%;width:100%;'>
+	<input id='bet' type='text' style='position:relative;top:0%;left:30%;width:20%;top:3%'>
+	<button id='spin' onclick="bets(actionSpin(),document.getElementById('bet').value)" style='display:inline;position:relative;top:0%;left:30%;width:20%;top:3%'>Spin</button>
+	<br>
+	<p id='winmsg' style='display:none;text-align:center;color:green;'>You WIN</p>
+	<p id='losemsg' style='display:none;text-align:center;color:red;'>You LOSE</p>
+	<p id='sin' style='display:none;text-align:center;color:red;'>Please enter a valid bet</p>
+	<p>Bets:
+	<br>+ Inside Bets:
+	<br>++ straight: 'straight [number]'
+	<br>++ split: 'split [number] [adjacent number]'
+	<br>++ street: 'street [number] [number 2 in same row] [number 3 in same row]'
+	<br>++ doublestreet: 'doublestreet [number in row 1] [number in row 1] [number in row 1] [number in row 2] [number in row 2] [number in row 2]'
+	<br>++ first four (0,1,2,3): 'first4'
+	<br>++ trio (0,1,2): 'trio'
+	<br>++ corner: 'corner [number 1 of 2x2 square] [number 2 of 2x2 square] [number 3 of 2x2 square] [number 4 of 2x2 square]'
+	<br>+ Outside Bets:
+	<br>++ high (19-36): 'high'
+	<br>++ low (1-18): 'low'
+	<br>++ red: 'red'
+	<br>++ black: 'black'
+	<br>++ even: 'even'
+	<br>++ odd: 'odd'
+	<br>++ 1st dozen (1-12): 'P12'
+	<br>++ 2nd dozen (13-24): 'M12'
+	<br>++ 3rd dozen (25-26): 'D12'
+	<br>++ column bet: 'column [1 or 2 or 3 depending on which column]'
+	<br>++ snake bet (1, 5, 9, 12, 14, 16, 19, 23, 27, 30, 32, and 34): 'snake'</p>
+</div>
+<img src='roulette_table.jpg' style='position:absolute;margin-left:40%;width:15%;top:0%;'>
+<script>
+document.getElementById('bet').addEventListener("keyup", function(event) {
+		if (event.keyCode === 13) {
+			event.preventDefault();
+		document.getElementById("spin").click();
+	}
+});
+function actionSpin(){
+	document.getElementById('spin').style.display = 'none';
+	var rouletteNumbers = [0,26,3,35,12,28,7,29,18,22,9,31,14,20,1,33,16,24,5,10,23,8,30,11,36,13,27,6,34,17,25,2,21,4,19,15,32]; /* counter-clockwise because it spins clockwise */
+	var elem = document.getElementById('wheel');
+	elem.id = '';
+	var displace = Math.floor(Math.random() * 37);
+	var displace_amount = displace * (360/37);
+	var end = '\n100%{transform: rotate('+(360+displace_amount).toString()+'deg)}'
+	if (displace == 0){
+		var end = '\n100%{transform: rotate(360deg)}'
+	}
+	document.getElementById('targetSpin').innerHTML = '\n@keyframes rouletteSpin{\n0% {transform: rotate(0deg)}'+end+'\n}\n#wheel{\n-webkit-animation: rouletteSpin 5s;\ntransform: rotate('+(360+displace_amount).toString()+'deg);\n}';
+	setTimeout(function (){elem.id = 'wheel'}, 1);
+	var result = rouletteNumbers[displace];
+	setTimeout(function (){document.getElementById('spin').style.display = 'inline'}, 5000)
+	return result
+}
+function bets(number, bet){ /* bets(actionSpin(),bet) */
+	document.getElementById('sin').style.display = 'none';
+	document.getElementById('winmsg').style.display = 'none';
+	document.getElementById('losemsg').style.display = 'none';
+	/* What is it ? */
+	var bet = bet.split(' ');
+	var black = [15,4,2,17,6,13,11,8,10,24,33,20,31,22,29,28,35,26];
+	if (black.includes(number)){
+		var colour = 'black';
+	}
+	else{
+		if (number == 0){
+			var colour = 'green';
+		}
+		else{
+			var colour = 'red';
+		}
+	}
+	
+	even = false;
+	if (number%2 == 0){
+		even = true;
+	}
+	/* Does it win */
+	const board = [ 1, 2, 3
+				  , 4, 5, 6
+				  , 7, 8, 9
+				  ,10,11,12
+				  ,13,14,15
+				  ,16,17,18
+				  ,19,20,21
+				  ,22,23,24
+				  ,25,26,27
+				  ,28,29,30
+				  ,31,32,33
+				  ,34,35,36];
+	var win = false;
+	var valid = ['black','red','even','odd','green','wheel','P12','M12','D12','straight','split','first4','snake','street','trio','high','low','column','doublestreet','corner'];
+	try{
+		if (valid.includes(bet[0])){
+			
+			/* Inside bets */
+			if (bet[0] == 'straight'){
+				if (parseInt(bet[1]) == number){
+					var win = true;
+				}
+			}
+			if (bet[0] == 'split'){
+				var n1 = parseInt(bet[1]);
+				var n2 = parseInt(bet[2]);
+				if (Math.abs(board.indexOf(n1)-board.indexOf(n2)) == 1 || Math.abs(board.indexOf(n1)-board.indexOf(n2)) == 3){
+					if (parseInt(board.indexOf(n1)/3) == parseInt(board.indexOf(n2)/3) || Math.abs(parseInt(board.indexOf(n1)/3)-parseInt(board.indexOf(n2)/3)) == 1){ /* Row dection */
+						if (number == n1 || number == n2){
+							var win = true;
+						}
+					}
+					else{
+						die
+					}
+				}
+				else{
+					die
+				}
+			}
+			/* Outside bets */
+			if (bet[0] == 'black' || bet[0] == 'red' || bet[0] == 'green'){
+				
+				if (colour == bet[0]){
+					var win = true;
+				}
+			}
+			if (bet[0] == 'even' && even){
+				var win = true;
+			}
+			if (bet[0] == 'odd' && !even){
+				var win = true;
+			}
+			if (bet[0] == 'P12' && number <= 12 && number >= 1){ /* first twelve */
+				var win = true;
+			}
+			if (bet[0] == 'M12' && number <= 24 && number >= 13){ /* second twelve */
+				var win = true;
+			}
+			if (bet[0] == 'D12' && number <= 36 && number >= 25){ /* third twelve */
+				var win = true;
+			}
+			if (bet[0] == 'first4' && number <= 3){
+				var win = true;
+			}
+			if (bet[0] == 'snake' && [1,5,9,12,14,16,19,23,27,30,32,34].includes(number)){
+				var win = true;
+			}
+			if (bet[0] == 'high' && number >= 19){
+				var win = true;
+			}
+			if (bet[0] == 'low' && number <= 18 && number >= 1){
+				var win = true;
+			}
+			if (bet[0] == 'column'){
+				var c1 = [1,4,7,10,13,16,19,22,25,28,31,34];
+				var c2 = [2,5,8,11,14,17,20,23,26,29,32,35];
+				var c3 = [3,6,9,12,15,18,21,24,27,30,33,36];
+				if (bet[1] == '1' && c1.includes(number)){
+					var win = true;
+				}
+				if (bet[1] == '2' && c2.includes(number)){
+					var win = true;
+				}
+				if (bet[1] == '3' && c3.includes(number)){
+					var win = true;
+				}
+			}
+			/* More inside bets because i'm lazy with formatting */
+			if (bet[0] == 'street'){
+				if (parseInt(board.indexOf(parseInt(bet[1]))/3) == parseInt(board.indexOf(parseInt(bet[2]))/3) && parseInt(board.indexOf(parseInt(bet[2]))/3) == parseInt(board.indexOf(parseInt(bet[3]))/3)){ /* Even more funky row detection */
+					if (number == parseInt(bet[1]) || number == parseInt(bet[2]) || number == parseInt(bet[3])){
+						var win = true;
+					}
+				}
+				else{
+					die
+				}
+			}
+			if (bet[0] == 'doublestreet'){
+				bet.splice(0,1);
+				var rows = ['','','','','',''];
+				for (var x in bet){
+					rows[x] = parseInt(board.indexOf(parseInt(bet[x]))/3);
+				}
+				var unique = '';
+				for (var x in rows){
+					if (!unique.split(' ').includes(rows[x].toString())){
+						var unique = unique+' '+rows[x].toString()
+					}
+				}
+				var rows_mod = unique.split(' ').slice(1);
+				if (rows_mod.length > 2){
+					die
+				}
+				if (Math.abs(parseInt(rows_mod[0])-parseInt(rows_mod[1])) != 1){
+					die
+				}
+				for (x in bet){
+					bet[x] = parseInt(bet[x]);
+				}
+				if (bet.includes(number)){
+					var win = true;
+				}
+			}
+			if (bet[0] == 'corner'){
+				bet.splice(0,1);
+				if (bet.length > 4){
+					die
+				}
+				var rows = ['','','',''];
+				for (var x in bet){
+					rows[x] = parseInt(board.indexOf(parseInt(bet[x]))/3);
+				}
+				var unique = '';
+				for (var x in rows){
+					if (!unique.split(' ').includes(rows[x].toString())){
+						var unique = unique+' '+rows[x].toString()
+					}
+				}
+				
+				var rows_mod = unique.split(' ').slice(1);
+				if (rows_mod.length > 2){
+					die
+				}
+				if (Math.abs(parseInt(rows_mod[0])-parseInt(rows_mod[1])) != 1){
+					die
+				}
+				var columns = '';
+				for (x in bet){
+					var y = (board.indexOf(parseInt(bet[x]))%3).toString();
+					if (!columns.split(' ').includes(y)){
+						var columns = columns + ' ' + y;
+					}
+				}
+				columns = columns.split(' ')
+				columns.splice(0,1);
+				if (columns.length > 2 || Math.abs(parseInt(columns[0])-parseInt(columns[1])) != 1){
+					die
+				}
+				if (number == parseInt(columns[0]) || number == parseInt(columns[1])){
+					var win = true;
+				}
+			}
+			if (bet[0] == 'trio'){
+				if (number == 0 || number == 1 || number == 2){
+					var win = true;
+				}
+			}
+		}
+		else{
+			die
+		}
+		if (win){
+			setTimeout(function (){document.getElementById('winmsg').style.display = 'block'},5000);
+		}
+		else{
+			setTimeout(function (){document.getElementById('losemsg').style.display = 'block'},5000);
+		}
+	}
+	catch(err){
+		document.getElementById('targetSpin').innerHTML = '';
+		document.getElementById('spin').style.display = 'inline';
+		document.getElementById('sin').style.display = 'block';
+	}
+}
+</script>
+</body>
