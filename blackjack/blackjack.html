@@ -1,0 +1,185 @@
+<head>
+</head>
+<style>
+.noselect{
+user-select:none;
+-webkit-touch-callout:none;
+}
+#fade-in {
+opacity:0;
+display:block;
+-webkit-animation: fadein 1s;
+position:absolute;
+z-index:10;
+width:100%;
+height:100%;
+background-image: linear-gradient(to bottom right,#219147,#1eb351);
+left:0%;
+top:0%;
+}
+@keyframes fadein {
+from { opacity: 1; }
+to   { opacity: 0; }
+}
+.card{
+height:100%;
+bottom:0%;
+position:relative;
+}
+#table{
+top:0%;
+height:80%;
+left:0%;
+position:absolute;
+width:100%;
+background-size:cover;
+background-position:center;
+background-image:url("blackjack_table.jpg");
+}
+</style>
+<style id='targetStyle'>
+.showlater{
+display:none;
+}
+.hidelater{
+display:inline;
+}
+</style>
+<body>
+<span id="fade-in" class='noselect'></span>
+<div id='table' class='noselect'>
+<div id='bot_display_window' style='width:100%;left:0%;height:20%;position:relative;'>
+</div>
+<div id='display_window' style='top:60%;width:100%;left:0%;height:20%;position:relative;'>
+</div>
+<div style='top:102%;position:absolute;width:100%;'>
+<input type='button' id='hit' value='hit' onclick="randCard('player')" style='width:10%;'>
+<input type='button' id='stand' value='stand' onclick="botTurn()" style='width:10%;'>
+</div>
+<p id='win' style='display:none;text-align:center;color:green;font-size:100px;'>You WIN</p>
+<p id='lose' style='display:none;text-align:center;color:red;font-size:100px;'>You LOSE</p>
+<p id='tie' style='display:none;text-align:center;color:white;font-size:100px;'>You TIED</p>
+<input type='button' id='replay' value='replay' onclick="location.reload();" style='width:10%;left:45%;position:absolute;display:none;'>
+<script>
+function Fade(){
+	document.getElementById("fade-in").style.display = "block";
+	setTimeout(function(){document.getElementById("fade-in").style.display = "none";},1000);
+}
+Fade();
+/* Cards from http://acbl.mybigcommerce.com/52-playing-cards/ */
+sessionStorage.setItem('player','0');
+sessionStorage.setItem('player_aces','0');
+sessionStorage.setItem('bot','0');
+sessionStorage.setItem('bot_aces','0');
+var deck = {'H':['A','2','3','4','5','6','7','8','9','10','J','Q','K'],'S':['A','2','3','4','5','6','7','8','9','10','J','Q','K'],'C':['A','2','3','4','5','6','7','8','9','10','J','Q','K'],'D':['A','2','3','4','5','6','7','8','9','10','J','Q','K']};
+function randCard(player){
+	var stop = false;
+	var suite = Math.floor(Math.random() * 4);
+	if (suite == 0){
+		var suite = 'H';
+	}
+	if (suite == 1){
+		var suite = 'S';
+	}
+	if (suite == 2){
+		var suite = 'C';
+	}
+	if (suite == 3){
+		var suite = 'D';
+	}
+	var card = deck[suite][Math.floor(Math.random() * deck[suite].length)];
+	deck[suite].splice(deck[suite].indexOf(card),1);
+	if (player == 'player'){
+		elem = document.createElement("img");  
+		elem.setAttribute('src','cards/'+card+suite+'.png');
+		elem.setAttribute('class','card');
+		document.getElementById('display_window').appendChild(elem);
+	}
+	if (player == 'bot'){
+		elem = document.createElement("img");  
+		elem.setAttribute('src','cards/'+card+suite+'.png');
+		elem.setAttribute('class','card showlater');
+		document.getElementById('bot_display_window').appendChild(elem);
+		elem2 = document.createElement("img");  
+		elem2.setAttribute('src','cards/red_back.png');
+		elem2.setAttribute('class','card hidelater');
+		document.getElementById('bot_display_window').appendChild(elem2);
+	}
+	var current_score = parseInt(sessionStorage.getItem(player));
+	if (card == 'A'){
+		if (current_score + 11 <= 21){
+			sessionStorage.setItem(player,current_score+11);
+			sessionStorage.setItem(player+'_aces',parseInt(sessionStorage.getItem(player+'_aces'))+1);
+		}
+		else{
+			sessionStorage.setItem(player,current_score+1);
+		}
+	}
+	else{
+		if (card != 'K' && card != 'Q' && card != 'J'){
+			sessionStorage.setItem(player,current_score+parseInt(card));
+		}
+		else{
+			sessionStorage.setItem(player,current_score+10);
+		}
+	}
+	console.log(player);
+	if (parseInt(sessionStorage.getItem(player)) > 21){
+		if(sessionStorage.getItem(player+'_aces') == '0'){
+			document.getElementById('hit').style.display = 'none';
+			document.getElementById('stand').style.display = 'none';
+			document.getElementById('replay').style.display = 'block';
+			document.getElementById('targetStyle').innerHTML = '.showlater{display:inline;}\n.hidelater{display:none;}';
+			if (player == 'player'){
+				document.getElementById('lose').style.display = 'block';
+			}
+			else{
+				document.getElementById('win').style.display = 'block';
+			}
+		}
+		else{
+			sessionStorage.setItem(player+'_aces','0');
+			sessionStorage.setItem(player,parseInt(sessionStorage.getItem(player))-10);
+		}
+	}
+	if (parseInt(sessionStorage.getItem(player)) == 21){
+		document.getElementById('hit').style.display = 'none';
+		document.getElementById('stand').style.display = 'none';
+		document.getElementById('replay').style.display = 'block';
+		document.getElementById('targetStyle').innerHTML = '.showlater{display:inline;}\n.hidelater{display:none;}';
+		if (player == 'player'){
+			document.getElementById('win').style.display = 'block';
+		}
+		else{
+			document.getElementById('lose').style.display = 'block';
+		}
+	}
+	return stop
+}
+function botTurn(stop = false){
+	if(parseInt(sessionStorage.getItem('bot')) < 18){
+		randCard('bot');
+		botTurn();
+	}
+	if (!(document.getElementById('replay').style.display == 'block')){
+		document.getElementById('hit').style.display = 'none';
+		document.getElementById('stand').style.display = 'none';
+		document.getElementById('replay').style.display = 'block';
+		document.getElementById('targetStyle').innerHTML = '.showlater{display:inline;}\n.hidelater{display:none;}';
+		if(parseInt(sessionStorage.getItem('bot')) < parseInt(sessionStorage.getItem('player'))){
+			document.getElementById('win').style.display = 'block';
+		}
+		if(parseInt(sessionStorage.getItem('bot')) > parseInt(sessionStorage.getItem('player'))){
+			document.getElementById('lose').style.display = 'block';
+		}
+		if(parseInt(sessionStorage.getItem('bot')) == parseInt(sessionStorage.getItem('player'))){
+			document.getElementById('tie').style.display = 'block';
+		}
+	}
+}
+randCard('player');
+randCard('player');
+randCard('bot');
+randCard('bot');
+</script>
+</body>
