@@ -4,4 +4,4 @@ Roulette table from https://en.wikipedia.org/wiki/Roulette#/media/File:French_La
 
 A game of European (one 0) roulette
 
-Demo: https://doug-doug-doug.github.io/roulette/roulette.html
+Demo: https://doug-doug-doug.github.io/casino/roulette
