@@ -6,7 +6,7 @@
 </style>
 <div class='wheel_container' style='width:30%;height:40%;'>
 	<img src='pointer.png' style='position:relative;top:0%;left:40%;width:20%;z-index:100;height:20%;'>
-	<img id='wheel' src='roulette_wheel.PNG' style='position:relative;top:0%;left:0%;width:100%;'>
+	<img id='wheel' src='roulette_wheel.png' style='position:relative;top:0%;left:0%;width:100%;'>
 	<input id='bet' type='text' style='position:relative;top:0%;left:30%;width:20%;top:3%'>
 	<button id='spin' onclick="bets(actionSpin(),document.getElementById('bet').value)" style='display:inline;position:relative;top:0%;left:30%;width:20%;top:3%'>Spin</button>
 	<br>
@@ -15,25 +15,25 @@
 	<p id='sin' style='display:none;text-align:center;color:red;'>Please enter a valid bet</p>
 	<p>Bets:
 	<br>+ Inside Bets:
-	<br>++ straight: 'straight [number]'
-	<br>++ split: 'split [number] [adjacent number]'
-	<br>++ street: 'street [number] [number 2 in same row] [number 3 in same row]'
-	<br>++ doublestreet: 'doublestreet [number in row 1] [number in row 1] [number in row 1] [number in row 2] [number in row 2] [number in row 2]'
-	<br>++ first four (0,1,2,3): 'first4'
-	<br>++ trio (0,1,2): 'trio'
-	<br>++ corner: 'corner [number 1 of 2x2 square] [number 2 of 2x2 square] [number 3 of 2x2 square] [number 4 of 2x2 square]'
+	<br>straight: 'straight [number]'
+	<br>split: 'split [number] [adjacent number]'
+	<br>street: 'street [number] [number 2 in same row] [number 3 in same row]'
+	<br>doublestreet: 'doublestreet [number in row 1] [number in row 1] [number in row 1] [number in row 2] [number in row 2] [number in row 2]'
+	<br>first four (0,1,2,3): 'first4'
+	<br>trio (0,1,2): 'trio'
+	<br>corner: 'corner [number 1 of 2x2 square] [number 2 of 2x2 square] [number 3 of 2x2 square] [number 4 of 2x2 square]'
 	<br>+ Outside Bets:
-	<br>++ high (19-36): 'high'
-	<br>++ low (1-18): 'low'
-	<br>++ red: 'red'
-	<br>++ black: 'black'
-	<br>++ even: 'even'
-	<br>++ odd: 'odd'
-	<br>++ 1st dozen (1-12): 'P12'
-	<br>++ 2nd dozen (13-24): 'M12'
-	<br>++ 3rd dozen (25-26): 'D12'
-	<br>++ column bet: 'column [1 or 2 or 3 depending on which column]'
-	<br>++ snake bet (1, 5, 9, 12, 14, 16, 19, 23, 27, 30, 32, and 34): 'snake'</p>
+	<br>high (19-36): 'high'
+	<br>low (1-18): 'low'
+	<br>red: 'red'
+	<br>black: 'black'
+	<br>even: 'even'
+	<br>odd: 'odd'
+	<br>1st dozen (1-12): 'P12'
+	<br>2nd dozen (13-24): 'M12'
+	<br>3rd dozen (25-26): 'D12'
+	<br>column bet: 'column [1 or 2 or 3]'
+	<br>snake bet (1, 5, 9, 12, 14, 16, 19, 23, 27, 30, 32, and 34): 'snake'</p>
 </div>
 <img src='roulette_table.jpg' style='position:absolute;margin-left:40%;width:15%;top:0%;'>
 <script>
