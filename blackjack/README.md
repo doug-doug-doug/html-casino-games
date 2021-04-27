@@ -4,6 +4,6 @@
 
 This is a game of blackjack. The AI is kind of dumb (it draws until its total score is > 18).
 
-Cards from http://acbl.mybigcommerce.com/52-playing-cards/
+Cards from http://acbl.mybigcommerce.com/52-playing-cards/ and wood table from https://www.pinterest.com.au/pin/26740191517437194/
 
 Demo: https://doug-doug-doug.github.io/casino/blackjack
